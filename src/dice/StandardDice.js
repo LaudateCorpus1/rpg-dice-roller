@@ -3,6 +3,7 @@ import { isNumeric, isSafeNumber } from '../utilities/math.js';
 import { generator } from '../utilities/NumberGenerator.js';
 import ComparePoint from '../ComparePoint.js';
 import ExplodeModifier from '../modifiers/ExplodeModifier.js';
+import HasDescription from '../traits/HasDescription.js';
 import Modifier from '../modifiers/Modifier.js';
 import RollResult from '../results/RollResult.js';
 import RollResults from '../results/RollResults.js';
@@ -17,7 +18,7 @@ const maxSymbol = Symbol('max-value');
 /**
  * Represents a standard numerical die.
  */
-class StandardDice {
+class StandardDice extends HasDescription {
   /**
    * Create a `StandardDice` instance.
    *
@@ -31,6 +32,9 @@ class StandardDice {
    * @throws {TypeError} qty must be a positive integer, and modifiers must be valid
    */
   constructor(sides, qty = 1, modifiers = null, min = 1, max = null) {
+    // @todo this should pass through the description
+    super();
+
     if (!sides && (sides !== 0)) {
       throw new RequiredArgumentError('sides');
     } else if (sides === Infinity) {

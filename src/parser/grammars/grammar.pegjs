@@ -7,7 +7,7 @@ Main = Expression
 
 // Expression / roll groups
 RollGroup
-  = "{" _ expr:Expression exprs:(_ "," _ Expression)* _ "}" modifiers:Modifier* __ {
+  = "{" _ expr:Expression exprs:(_ "," _ Expression)* _ "}" modifiers:Modifier* descriptions:__ {
     return new RollGroup(
       [
         expr,
@@ -15,14 +15,15 @@ RollGroup
       ],
       Object.assign({}, ...modifiers.map(item => {
         return {[item.name]: item};
-      }))
+      })),
+      descriptions.find((o) => o instanceof Description)
     );
   }
 
 
 // Dice
 
-Dice = die:(StandardDie / PercentileDie / FudgeDie) modifiers:Modifier* __ {
+Dice = die:(StandardDie / PercentileDie / FudgeDie) modifiers:Modifier* descriptions:__ {
   die.modifiers = Object.assign({}, ...modifiers.map(item => {
     return {[item.name]: item};
   }));
@@ -209,12 +210,11 @@ Comment "comment"
 
 // allows comments in the format of /* .. */ and [ ... ]
 MultiLineComment
-  = "/*" (!"*/" .)* "*/"
-  / "[" [^\]]* "]"
+  = ("/*" (!"*/" .)* "*/" / "[" [^\]]* "]") { return new Description(text(), 'multiline') }
 
 // allows comments in the format of // ... and # ...
 SingleLineComment
-  = ("//" / "#") (!LineTerminator .)*
+  = ("//" / "#") (!LineTerminator .)* { return new Description(text(), 'inline') }
 
 
 LineTerminator

@@ -25,7 +25,7 @@ class Description {
   /**
    * Set the description text.
    *
-   * @param {string|number|boolean|null|undefined} text
+   * @param {string|number} text
    */
   set text(text) {
     if (typeof text === 'object') {
@@ -75,6 +75,23 @@ class Description {
       text,
       type,
     };
+  }
+
+  /**
+   * Return the String representation of the object.
+   *
+   * This is called automatically when casting the object to a string.
+   *
+   * @see {@link Description#text}
+   *
+   * @returns {string}
+   */
+  toString() {
+    if (this.type === 'inline') {
+      return `# ${this.text}`;
+    }
+
+    return `[${this.text}]`;
   }
 }
 

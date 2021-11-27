@@ -355,18 +355,20 @@ describe('RollGroup', () => {
     test('can be changed', () => {
       expect(group.description).toBeInstanceOf(Description);
       expect(group.description.text).toEqual('a description');
+      expect(group.description.type).toEqual('inline');
 
       group.description = 'foo';
       expect(group.description).toBeInstanceOf(Description);
       expect(group.description.text).toEqual('foo');
 
-      group.description = 'bax bar';
+      group.description = 'baz bar';
       expect(group.description).toBeInstanceOf(Description);
       expect(group.description.text).toEqual('baz bar');
 
-      group.description = new Description('foo bar');
+      group.description = new Description('foo bar', 'multiline');
       expect(group.description).toBeInstanceOf(Description);
       expect(group.description.text).toEqual('foo bar');
+      expect(group.description.type).toEqual('multiline');
     });
 
     test('setting to falsey get set to `null`', () => {
@@ -469,7 +471,10 @@ describe('RollGroup', () => {
     describe('With description', () => {
       test('JSON output is correct', () => {
         expect(JSON.parse(JSON.stringify(group))).toEqual({
-          description: 'a description',
+          description: {
+            text: 'a description',
+            type: 'inline',
+          },
           expressions: [
             [3, '+', 4],
             [
@@ -499,7 +504,7 @@ describe('RollGroup', () => {
       });
 
       test('String output is correct', () => {
-        expect(group.toString()).toEqual('{3+4, 4d6/2, 1d10*1d20}');
+        expect(group.toString()).toEqual('{3+4, 4d6/2, 1d10*1d20} # a description');
       });
     });
 

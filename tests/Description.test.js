@@ -142,4 +142,36 @@ describe('Description', () => {
       }).toThrow(RangeError);
     });
   });
+
+  describe('Output', () => {
+    describe('inline', () => {
+      test('JSON output is correct', () => {
+        expect(JSON.parse(JSON.stringify(description))).toEqual({
+          text,
+          type: 'inline',
+        });
+      });
+
+      test('String output is correct', () => {
+        expect(description.toString()).toEqual(`# ${text}`);
+      });
+    });
+
+    describe('multiline', () => {
+      test('JSON output is correct', () => {
+        description.type = 'multiline';
+
+        expect(JSON.parse(JSON.stringify(description))).toEqual({
+          text,
+          type: 'multiline',
+        });
+      });
+
+      test('String output is correct', () => {
+        description.type = 'multiline';
+
+        expect(description.toString()).toEqual(`[${text}]`);
+      });
+    });
+  });
 });
